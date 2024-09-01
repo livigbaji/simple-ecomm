@@ -1,33 +1,38 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { PRODUCT_TABLE } from 'src/config';
 
 @Entity({
-  name: 'product',
+  name: PRODUCT_TABLE,
 })
-export class User {
+export class Product {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty({ format: 'uuid'})
+  @ApiProperty({ format: 'uuid' })
   id: string;
 
-  @Column({
-    nullable: false,
-  })
+  @Column({})
   @ApiProperty()
   name: string;
 
   @Column({
-    unique: true,
+    type: 'float',
   })
   @ApiProperty()
-  price: string;
+  price: number;
+
+  @Column({})
+  @ApiProperty()
+  description: string;
 
   @Column({ default: false })
   @ApiProperty()
-  description: boolean;
-
-  @Column({ default: false })
-  @ApiProperty()
-  quantity: boolean;
+  quantity: number;
 
   @Column({ nullable: true })
   @ApiProperty()

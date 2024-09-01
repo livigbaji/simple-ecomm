@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
+import { CreateUserTable1725142893807 } from './migrations/1725142893807-create_user_table';
+import { CreateProductTable1725143531975 } from './migrations/1725143531975-create_product_table';
 
 @Module({
   imports: [
@@ -18,6 +20,11 @@ import { ProductsModule } from './modules/products/products.module';
         type: 'sqlite',
         database: configService.get('DATABASE'),
         autoLoadEntities: true,
+        migrations: [
+          CreateUserTable1725142893807,
+          CreateProductTable1725143531975,
+        ],
+        migrationsRun: true,
       }),
     }),
     UsersModule,

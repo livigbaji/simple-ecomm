@@ -1,12 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { USER_TABLE } from 'src/config';
 
 @Entity({
-  name: 'users',
+  name: USER_TABLE,
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty({ format: 'uuid'})
+  @ApiProperty({ format: 'uuid' })
   id: string;
 
   @Column({
@@ -24,7 +31,7 @@ export class User {
   isAdmin: boolean;
 
   @Column({ default: false })
-  isBanned: boolean
+  isBanned: boolean;
 
   @Column({ nullable: true })
   isBannedAt: Date;
