@@ -18,7 +18,6 @@ export class ViewUsersResponseDto extends PaginatedResponseDto {
   data: User[];
 }
 
-
 export class BannedUserResponseDto {
   @ApiProperty()
   banned: boolean;

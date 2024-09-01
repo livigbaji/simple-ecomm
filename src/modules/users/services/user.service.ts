@@ -45,8 +45,18 @@ export class UserService {
     );
   }
 
-  private verifyToken(payload: string) {
-    return verify(payload, this.jwtPrivateKey);
+  verifyToken(payload: string, isAdmin: boolean) {
+    const decoded = verify(payload, this.jwtPrivateKey) as unknown as {
+      id: string;
+    };
+
+    if (!decoded || !decoded.id) return null;
+
+    return this.userRepository.findOneBy({
+      id: decoded.id,
+      isBanned: false,
+      isAdmin,
+    });
   }
 
   async createUser(user: RegisterUserDto, isAdmin = false) {

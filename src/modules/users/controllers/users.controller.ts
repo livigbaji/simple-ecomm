@@ -2,7 +2,12 @@ import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { PaginationDto } from 'src/dtos/pagination.dto';
-import { BannedUserResponseDto, UnBannedUserResponseDto, ViewUsersResponseDto } from '../dtos/response.dto';
+import {
+  BannedUserResponseDto,
+  UnBannedUserResponseDto,
+  ViewUsersResponseDto,
+} from '../dtos/response.dto';
+import { AdminOnly } from "src/decorators/logged-in.decorator";
 
 @ApiTags('Users')
 @Controller('users')
@@ -13,6 +18,7 @@ export class UsersController {
   @ApiOkResponse({
     type: ViewUsersResponseDto,
   })
+  @AdminOnly()
   viewUsers(@Query() pagination: PaginationDto) {
     return this.userService.viewUsers(pagination);
   }
@@ -21,6 +27,7 @@ export class UsersController {
   @ApiOkResponse({
     type: BannedUserResponseDto,
   })
+  @AdminOnly()
   banUser(@Param('userId') userId: string) {
     return this.userService.banUser(userId);
   }
@@ -29,6 +36,7 @@ export class UsersController {
   @ApiOkResponse({
     type: UnBannedUserResponseDto,
   })
+  @AdminOnly()
   unbanUser(@Param('userId') userId: string) {
     return this.userService.unBanUser(userId);
   }

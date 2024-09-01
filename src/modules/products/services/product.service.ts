@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, ProductStatusEnum } from '../dtos/product.dto';
+import { User } from '../../users/entities/user.entity';
 
 @Injectable()
 export class ProductService {
@@ -11,10 +12,10 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  createProduct(newProduct: CreateProductDto) {
+  createProduct(newProduct: CreateProductDto, user: User) {
     return this.productRepository.save({
       ...newProduct,
-      ownerId: '3f824c70-2e9e-4a43-b5e9-208a6eb3713c',
+      ownerId: user.id,
     });
   }
 

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { PRODUCT_TABLE } from 'src/config';
-import { ProductStatusEnum } from "../dtos/product.dto";
+import { ProductStatusEnum } from '../dtos/product.dto';
 
 @Entity({
   name: PRODUCT_TABLE,

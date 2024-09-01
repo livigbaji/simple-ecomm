@@ -54,7 +54,7 @@ export class CreateProductTable1725143531975 implements MigrationInterface {
 
           {
             name: 'status',
-            type: 'varchar'
+            type: 'varchar',
           },
 
           {
