@@ -20,10 +20,14 @@ export class CreateUserTable1725142893807 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'password',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
             name: 'email',
             type: 'varchar',
             isUnique: true,
-            isNullable: false,
           },
 
           {
@@ -41,7 +45,7 @@ export class CreateUserTable1725142893807 implements MigrationInterface {
           {
             name: 'is_banned_at',
             type: 'timestamp',
-            isNullable: false,
+            isNullable: true,
           },
 
           {
