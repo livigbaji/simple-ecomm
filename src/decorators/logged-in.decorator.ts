@@ -5,11 +5,11 @@ import {
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiForbiddenResponse } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiForbiddenResponse } from '@nestjs/swagger';
 import { LoggedInGuard } from '../guards/logged-in.guard';
 import { User } from '../modules/users/entities/user.entity';
 import { IS_ADMIN_ROLE_ACTIVE } from '../config';
-import { ForbiddenRequest } from "../dtos/errors.dto";
+import { ForbiddenRequest } from '../dtos/errors.dto';
 
 export const IsAdmin = (isAdmin: boolean) =>
   SetMetadata(IS_ADMIN_ROLE_ACTIVE, isAdmin);

@@ -19,7 +19,6 @@ export class LoggedInGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const header: string = req.get('Authorization');
 
-
     if (!header || !header.startsWith('Bearer')) {
       return false;
     }

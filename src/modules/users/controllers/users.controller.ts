@@ -7,7 +7,7 @@ import {
   UnBannedUserResponseDto,
   ViewUsersResponseDto,
 } from '../dtos/response.dto';
-import { AdminOnly } from "src/decorators/logged-in.decorator";
+import { AdminOnly } from 'src/decorators/logged-in.decorator';
 
 @ApiTags('Users')
 @Controller('users')

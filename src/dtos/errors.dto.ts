@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-
-
 export class ErrorsDto {
   @ApiProperty({
     example: 'bad request',
@@ -20,7 +18,6 @@ export class BadRequestDto extends ErrorsDto {
   })
   message: string[];
 }
-
 
 export class ForbiddenRequest extends ErrorsDto {
   @ApiProperty({
