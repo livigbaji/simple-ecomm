@@ -53,9 +53,8 @@ export class CreateProductTable1725143531975 implements MigrationInterface {
           },
 
           {
-            name: 'is_approved',
-            type: 'boolean',
-            default: false,
+            name: 'status',
+            type: 'varchar'
           },
 
           {
