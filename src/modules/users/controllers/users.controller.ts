@@ -1,5 +1,10 @@
 import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { PaginationDto } from '../../../dtos/pagination.dto';
 import {
@@ -8,7 +13,7 @@ import {
   ViewUsersResponseDto,
 } from '../dtos/response.dto';
 import { AdminOnly } from '../../../decorators/logged-in.decorator';
-import { BadRequestDto } from "../../../dtos/errors.dto";
+import { BadRequestDto } from '../../../dtos/errors.dto';
 
 @ApiTags('Users')
 @Controller('users')
