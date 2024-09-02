@@ -17,7 +17,7 @@ import {
   CurrentUser,
   LoggedInUser,
   UserOnly,
-} from 'src/decorators/logged-in.decorator';
+} from '../../../decorators/logged-in.decorator';
 import { User } from '../../users/entities/user.entity';
 import { PaginationDto } from '../../../dtos/pagination.dto';
 

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, In, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, ProductStatusEnum } from '../dtos/product.dto';
 import { User } from '../../users/entities/user.entity';
@@ -14,16 +14,20 @@ export class ProductService {
   ) {}
 
   createProduct(newProduct: CreateProductDto, user: User) {
-    return this.productRepository.save(
-      this.productRepository.create({
+    return this.productRepository
+      .save({
         ...newProduct,
         ownerId: user.id,
-      }),
-    );
+      })
+      .catch((e) => {
+        console.log('save failed', e);
+        throw new InternalServerErrorException();
+      });
   }
 
   async viewProducts(pagination: PaginationDto, user?: User) {
     const { page, size, search } = pagination;
+    const pageSize = +size || 100;
     const [products, count] = await this.productRepository.findAndCount({
       where: {
         // search through the name column if search term is passed
@@ -44,8 +48,8 @@ export class ProductService {
         }),
       },
 
-      take: size,
-      skip: page * size,
+      take: pageSize,
+      skip: (+page || 0) * pageSize,
       order: {
         createdAt: 'DESC',
       },
@@ -90,8 +94,8 @@ export class ProductService {
     return { deleted: !!affected };
   }
 
-  approve(product: string, reviewer: string) {
-    return this.productRepository.update(
+  async approve(product: string, reviewer: string) {
+    const { affected } = await this.productRepository.update(
       {
         id: product,
         status: ProductStatusEnum.PENDING_REVIEW,
@@ -102,10 +106,12 @@ export class ProductService {
         isApprovedAt: new Date(),
       },
     );
+
+    return { approved: !!affected };
   }
 
-  reject(product: string, reviewer: string) {
-    return this.productRepository.update(
+  async reject(product: string, reviewer: string) {
+    const { affected } = await this.productRepository.update(
       {
         id: product,
         status: ProductStatusEnum.PENDING_REVIEW,
@@ -116,5 +122,11 @@ export class ProductService {
         isRejectedAt: new Date(),
       },
     );
+
+    return { rejected: !!affected };
+  }
+
+  removeProduct(query: FindOptionsWhere<Product>) {
+    return this.productRepository.delete(query);
   }
 }

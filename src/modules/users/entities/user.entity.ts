@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { USER_TABLE } from 'src/config';
+import { USER_TABLE } from '../../../config';
 
 @Entity({
   name: USER_TABLE,

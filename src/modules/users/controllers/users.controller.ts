@@ -1,13 +1,13 @@
 import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
-import { PaginationDto } from 'src/dtos/pagination.dto';
+import { PaginationDto } from '../../../dtos/pagination.dto';
 import {
   BannedUserResponseDto,
   UnBannedUserResponseDto,
   ViewUsersResponseDto,
 } from '../dtos/response.dto';
-import { AdminOnly } from 'src/decorators/logged-in.decorator';
+import { AdminOnly } from '../../../decorators/logged-in.decorator';
 
 @ApiTags('Users')
 @Controller('users')

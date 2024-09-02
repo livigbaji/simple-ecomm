@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { PRODUCT_TABLE } from 'src/config';
+import { PRODUCT_TABLE } from '../../../config';
 import { ProductStatusEnum } from '../dtos/product.dto';
 
 @Entity({

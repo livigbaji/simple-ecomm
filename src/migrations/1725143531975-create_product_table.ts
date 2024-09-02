@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { PRODUCT_TABLE, USER_TABLE } from 'src/config';
+import { PRODUCT_TABLE, USER_TABLE } from '../config';
 
 export class CreateProductTable1725143531975 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

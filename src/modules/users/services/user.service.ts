@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, QueryFailedError, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, QueryFailedError, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { createHash } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
@@ -8,6 +8,7 @@ import { sign, verify } from 'jsonwebtoken';
 import { LoginUserDto, RegisterUserDto } from '../dtos/auth.dto';
 import { isNull, pick } from 'lodash';
 import { PaginationDto } from '../../../dtos/pagination.dto';
+import { RegistrationResponseDto } from '../dtos/response.dto';
 
 @Injectable()
 export class UserService {
@@ -46,17 +47,24 @@ export class UserService {
   }
 
   verifyToken(payload: string, isAdmin?: boolean) {
-    const decoded = verify(payload, this.jwtPrivateKey) as unknown as {
-      id: string;
-    };
+    try {
+      const decoded = verify(payload, this.jwtPrivateKey) as unknown as {
+        id: string;
+      };
 
-    if (!decoded || !decoded.id) return null;
+      if (!decoded || !decoded.id) return null;
 
-    return this.userRepository.findOneBy({
-      id: decoded.id,
-      isBanned: false,
-      ...(!isNull(isAdmin) && { isAdmin }),
-    });
+      return this.userRepository.findOneBy({
+        id: decoded.id,
+        isBanned: false,
+        ...(!isNull(isAdmin) && { isAdmin }),
+      });
+    } catch (error) {
+      if (!error.message.includes('expired')) {
+        console.log('JWT Error', error.message);
+      }
+      return null;
+    }
   }
 
   async createUser(user: RegisterUserDto, isAdmin = false) {
@@ -67,17 +75,19 @@ export class UserService {
         password: this.hash(user.password),
       })
       .catch((e: QueryFailedError) => {
-        console.log(e.message);
+        if (!e.message.includes('users.email')) {
+          console.log(e.message);
+        }
         // TODO make conform with other error format
         throw new BadRequestException({
-          email: 'Email already exists',
+          email: `Email ${user.email} already exists`,
         });
       });
 
     return {
-      user: newUser,
+      user: pick(newUser, this.authColumns),
       token: this.signToken(newUser),
-    };
+    } as RegistrationResponseDto;
   }
 
   async loginUser(loginRequest: LoginUserDto) {
@@ -105,11 +115,12 @@ export class UserService {
     return {
       user: pick(user, this.authColumns),
       token,
-    };
+    } as RegistrationResponseDto;
   }
 
   async viewUsers(pagination: PaginationDto) {
     const { page, size, search } = pagination;
+    const pageSize = +size || 100;
     const [users, count] = await this.userRepository.findAndCount({
       where: {
         ...(search && {
@@ -118,8 +129,8 @@ export class UserService {
         isAdmin: false,
       },
 
-      take: size,
-      skip: page * size,
+      take: pageSize,
+      skip: (+page || 0) * pageSize,
       order: {
         createdAt: 'DESC',
       },
@@ -161,5 +172,9 @@ export class UserService {
     );
 
     return { unbanned: !!affected };
+  }
+
+  deleteUser(query: FindOptionsWhere<User>) {
+    return this.userRepository.delete(query);
   }
 }
