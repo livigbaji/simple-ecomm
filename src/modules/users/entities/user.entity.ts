@@ -3,9 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn, ManyToOne, OneToMany,
-  JoinColumn
-} from "typeorm";
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { USER_TABLE } from '../../../config';
 import type { Product } from '../../products/entities/product.entity';
@@ -37,7 +37,7 @@ export class User {
 
   @OneToMany('Product', (product: Product) => product.owner)
   // @JoinColumn({ referencedColumnName: 'owner_id' })
-  products: Product[]
+  products: Product[];
 
   @Column({ default: false, name: 'is_admin' })
   @ApiProperty()

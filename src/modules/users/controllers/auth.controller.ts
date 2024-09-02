@@ -5,6 +5,7 @@ import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { RegistrationResponseDto } from '../dtos/response.dto';
@@ -23,6 +24,9 @@ export class AuthController {
   @ApiBadRequestResponse({
     type: BadRequestDto,
   })
+  @ApiOperation({
+    summary: `Login for users and admins`,
+  })
   login(@Body() loginRequest: LoginUserDto) {
     return this.userService.loginUser(loginRequest);
   }
@@ -34,6 +38,9 @@ export class AuthController {
   @ApiBadRequestResponse({
     type: BadRequestDto,
   })
+  @ApiOperation({
+    summary: `User registration`,
+  })
   register(@Body() registerRequest: RegisterUserDto) {
     return this.userService.createUser(registerRequest);
   }
@@ -44,6 +51,9 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     type: BadRequestDto,
+  })
+  @ApiOperation({
+    summary: `Admin registration`,
   })
   registerAdmin(@Body() registerRequest: RegisterUserDto) {
     return this.userService.createUser(registerRequest, true);

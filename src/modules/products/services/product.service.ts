@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, FindOptionsWhere, ILike, In, Repository } from "typeorm";
+import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, ProductStatusEnum } from '../dtos/product.dto';
 import { User } from '../../users/entities/user.entity';
@@ -47,7 +47,7 @@ export class ProductService {
           status: ProductStatusEnum.APPROVED,
           owner: {
             isBanned: false,
-          }
+          },
         }),
       },
 

@@ -9,20 +9,28 @@ This project is a simple e-commerce system that allows:
 
 ## Project setup
 
-``sh
+Install NodeJS and NPM. Use this link and follow the steps for your own operating system https://nodejs.org/en/download/
+
+Install Git from https://git-scm.com/downloads
+
+From your terminal or command line run:
+
+```sh
 # clone from githhub
-$ git clone git@github.com:bestbrain10/scrapple-x.git
+$ git clone https://github.com/livigbaji/simple-ecomm
 
 # move into project directory
-$ cd scrapple-x
+$ cd simple-ecomm
 
-``
-
-```bash
+# install dependencies
 $ npm install
 ```
 
 ## Compile and run the project
+
+Unless you changed your port through environmental variable `PORT` or directly in the code, the API can be accessed via:
+
+http://localhost:3000/
 
 ```bash
 # development
@@ -38,16 +46,13 @@ $ npm run start:prod
 ## Run tests
 
 ```bash
-# unit tests
-$ npm run test
-
 # e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Resources
+## Documentation
+The swagger (openAPI) documentation can be accessed via:
+http://localhost:3000/api
+
 
 

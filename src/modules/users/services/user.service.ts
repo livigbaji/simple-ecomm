@@ -94,6 +94,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         email: loginRequest.email,
+        isBanned: false,
       },
       select: ['password', ...(this.authColumns as Array<keyof User>)],
     });
