@@ -3,11 +3,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn, ManyToOne, JoinColumn
+} from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
 import { PRODUCT_TABLE } from '../../../config';
 import { ProductStatusEnum } from '../dtos/product.dto';
+import type { User } from '../../users/entities/user.entity';
 
 @Entity({
   name: PRODUCT_TABLE,
@@ -21,6 +22,10 @@ export class Product {
     name: 'owner_id',
   })
   ownerId: string;
+
+  @ManyToOne('User', (user: User) => user.products)
+  @JoinColumn({ name: 'owner_id' })
+  owner: User
 
   @Column({})
   @ApiProperty()

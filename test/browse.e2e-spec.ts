@@ -64,6 +64,7 @@ describe('ProductController (e2e)', () => {
         ...bannedProducts.map(({ id }) => id),
       ]),
     });
+
     await userService.deleteUser({
       email: In([adminEmail, user.user.email, bannedUser.user.email]),
     });
@@ -71,6 +72,8 @@ describe('ProductController (e2e)', () => {
 
   it('/products (GET)', async () => {
     await productService.approve(products.at(0).id, admin.user.id);
+    await productService.approve(bannedProducts.at(0).id, admin.user.id);
+    await userService.banUser(bannedUser.user.id);
 
     const response = await request(app.getHttpServer())
       .get('/products/browse')
@@ -80,8 +83,6 @@ describe('ProductController (e2e)', () => {
       total: expect.any(Number),
       data: expect.any(Array),
     });
-
-    console.log(response.body.data);
 
     expect(response.body.data.at(0)).toMatchObject({
       id: expect.any(String),

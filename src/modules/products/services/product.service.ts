@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, ILike, In, Repository } from "typeorm";
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, ProductStatusEnum } from '../dtos/product.dto';
 import { User } from '../../users/entities/user.entity';
@@ -42,10 +42,18 @@ export class ProductService {
           !user.isAdmin && {
             ownerId: user.id,
           }),
-        // if it is a guest user then filter by approved
+        // if it is a guest user then filter by approved, removed banned users product
         ...(!user && {
           status: ProductStatusEnum.APPROVED,
+          owner: {
+            isBanned: false,
+          }
         }),
+      },
+
+      // if product list is being viewed by admin or guest user
+      relations: {
+        owner: !user || user.isAdmin,
       },
 
       take: pageSize,

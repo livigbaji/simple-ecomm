@@ -25,7 +25,7 @@ export const createProducts = (
       return productService.createProduct(
         {
           price: index * (random(true) + 1),
-          name: `Minted user ${index}`,
+          name: `Minted product ${index}`,
           description: `Lorem ipsum dolor sit amet for product ${index} for user ${user.id}`,
           quantity: index * random(false),
         },
