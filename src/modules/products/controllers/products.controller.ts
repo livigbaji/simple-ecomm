@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from '../services/product.service';
@@ -13,9 +15,11 @@ import { CreateProductDto } from '../dtos/product.dto';
 import {
   AdminOnly,
   CurrentUser,
+  LoggedInUser,
   UserOnly,
 } from 'src/decorators/logged-in.decorator';
 import { User } from '../../users/entities/user.entity';
+import { PaginationDto } from '../../../dtos/pagination.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -29,6 +33,17 @@ export class ProductsController {
     @CurrentUser() user: User,
   ) {
     return this.productService.createProduct(newProduct, user);
+  }
+
+  @Get()
+  @LoggedInUser()
+  viewProducts(@Query() pagination: PaginationDto, @CurrentUser() user: User) {
+    return this.productService.viewProducts(pagination, user);
+  }
+
+  @Get('browse')
+  browseProducts(@Query() pagination: PaginationDto) {
+    return this.productService.viewProducts(pagination);
   }
 
   @Put(':productId')

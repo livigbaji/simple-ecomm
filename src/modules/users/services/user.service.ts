@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
 import { sign, verify } from 'jsonwebtoken';
 import { LoginUserDto, RegisterUserDto } from '../dtos/auth.dto';
-import { pick } from 'lodash';
+import { isNull, pick } from 'lodash';
 import { PaginationDto } from '../../../dtos/pagination.dto';
 
 @Injectable()
@@ -45,7 +45,7 @@ export class UserService {
     );
   }
 
-  verifyToken(payload: string, isAdmin: boolean) {
+  verifyToken(payload: string, isAdmin?: boolean) {
     const decoded = verify(payload, this.jwtPrivateKey) as unknown as {
       id: string;
     };
@@ -55,7 +55,7 @@ export class UserService {
     return this.userRepository.findOneBy({
       id: decoded.id,
       isBanned: false,
-      isAdmin,
+      ...(!isNull(isAdmin) && { isAdmin }),
     });
   }
 

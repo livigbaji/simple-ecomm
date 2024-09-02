@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, ProductStatusEnum } from '../dtos/product.dto';
 import { User } from '../../users/entities/user.entity';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 
 @Injectable()
 export class ProductService {
@@ -13,10 +14,47 @@ export class ProductService {
   ) {}
 
   createProduct(newProduct: CreateProductDto, user: User) {
-    return this.productRepository.save({
-      ...newProduct,
-      ownerId: user.id,
+    return this.productRepository.save(
+      this.productRepository.create({
+        ...newProduct,
+        ownerId: user.id,
+      }),
+    );
+  }
+
+  async viewProducts(pagination: PaginationDto, user?: User) {
+    const { page, size, search } = pagination;
+    const [products, count] = await this.productRepository.findAndCount({
+      where: {
+        // search through the name column if search term is passed
+        ...(search && {
+          Or: [
+            { name: ILike(`%${search}%`) },
+            { description: ILike(`%${search}%`) },
+          ],
+        }),
+        // if it is a logged-in user and not admin, filter by owner ID
+        ...(user &&
+          !user.isAdmin && {
+            ownerId: user.id,
+          }),
+        // if it is a guest user then filter by approved
+        ...(!user && {
+          status: ProductStatusEnum.APPROVED,
+        }),
+      },
+
+      take: size,
+      skip: page * size,
+      order: {
+        createdAt: 'DESC',
+      },
     });
+
+    return {
+      total: count,
+      data: products,
+    };
   }
 
   async updateProduct(
@@ -50,16 +88,6 @@ export class ProductService {
     });
 
     return { deleted: !!affected };
-  }
-
-  viewUserProduct() {
-    //TODO paginate
-    throw new Error('not implemented');
-  }
-
-  viewApprovedProducts() {
-    //TODO paginate
-    throw new Error('not implemented');
   }
 
   approve(product: string, reviewer: string) {

@@ -14,10 +14,17 @@ export class CreateProductTable1725143531975 implements MigrationInterface {
             columnNames: ['owner_id'],
           },
           {
-            name: 'user_owner_id',
+            name: 'user_reviewer_id',
             referencedTableName: USER_TABLE,
             referencedColumnNames: ['id'],
             columnNames: ['reviewed_by'],
+          },
+        ],
+        indices: [
+          {
+            name: 'product_search',
+            isFulltext: true,
+            columnNames: ['description', 'name'],
           },
         ],
         columns: [
@@ -33,7 +40,6 @@ export class CreateProductTable1725143531975 implements MigrationInterface {
             name: 'owner_id',
             type: 'varchar',
           },
-
           {
             name: 'name',
             type: 'varchar',

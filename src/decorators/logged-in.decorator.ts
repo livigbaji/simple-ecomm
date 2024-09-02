@@ -10,19 +10,20 @@ import { LoggedInGuard } from '../guards/logged-in.guard';
 import { User } from '../modules/users/entities/user.entity';
 import { IS_ADMIN_ROLE_ACTIVE } from '../config';
 import { ForbiddenRequest } from '../dtos/errors.dto';
+import { isNull } from 'lodash';
 
 export const IsAdmin = (isAdmin: boolean) =>
   SetMetadata(IS_ADMIN_ROLE_ACTIVE, isAdmin);
 
-function LoggedInUser(isAdmin: boolean) {
-  return applyDecorators(
-    IsAdmin(isAdmin),
+export function LoggedInUser(isAdmin?: boolean) {
+  return applyDecorators.apply(null, [
+    ...(!isNull(isAdmin) ? [IsAdmin(isAdmin)] : []),
     ApiBearerAuth(),
     ApiForbiddenResponse({
       type: ForbiddenRequest,
     }),
     UseGuards(LoggedInGuard),
-  );
+  ]);
 }
 
 export function AdminOnly() {
